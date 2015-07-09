@@ -17,7 +17,7 @@
     <string name="descricao">Descrição</string>
     <string name="formaPagamento">Forma de Pagamento</string>
     <string name="categoriaDespesa">Categoria Despesa</string>
-    <string name="list_despesas">Listar Despesas</string>
+    <string name="list_despesas">Despesas</string>
 
     <string-array name="categorias_array">
         <item></item>
@@ -49,11 +49,12 @@
 
     <string-array name="formaPgto_array">
         <item></item>
-        <item>Cartão Crédito</item>
-        <item>Cartão Débito</item>
-        <item>Cheque</item>
         <item>Dinheiro</item>
+        <item>Cartão Débito</item>
+        <item>Cartão Crédito</item>
+        <item>Cheque</item>
     </string-array>
+
     <string name="title_activity_despesas_list">DespesasListActivity</string>
     <string name="relatorios">Relatórios</string>
     <string name="title_activity_relatorio">RelatorioActivity</string>

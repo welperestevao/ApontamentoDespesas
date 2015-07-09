@@ -47,20 +47,14 @@ public class AdapterDespesa extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.despesa_list,null);
 
-        TextView categoria = (TextView) v.findViewById(R.id.categoria);
-        categoria.setText("Categoria: " + e.getCategoria());
-
         TextView despesa = (TextView) v.findViewById(R.id.despesa);
         despesa.setText("Despesa: " + e.getDescricao());
 
         TextView data = (TextView) v.findViewById(R.id.data);
-        data.setText("Data: " + e.getDataFormatada());
+        data.setText(e.getDataFormatada() + " - " + e.getCategoria());
 
         TextView valor = (TextView) v.findViewById(R.id.valor);
-        valor.setText("Valor: " + NumberFormat.getCurrencyInstance().format( new Double(e.getValor().toString()) ));
-
-        TextView pgto = (TextView) v.findViewById(R.id.formaPgto);
-        pgto.setText("Forma Pagamento: " + e.getFormaPgto());
+        valor.setText(NumberFormat.getCurrencyInstance().format( new Double(e.getValor().toString())) +  " - " + e.getFormaPgto());
 
         return v;
     }

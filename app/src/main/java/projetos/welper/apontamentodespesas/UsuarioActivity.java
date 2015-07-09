@@ -25,7 +25,6 @@ public class UsuarioActivity extends ActionBarActivity {
         setContentView(R.layout.usuario_activity);
 
         dao = new LoginDao(this);
-        dao.abreConexao();
 
         usuario = (EditText) findViewById(R.id.txtUsuario);
         senha = (EditText) findViewById(R.id.txtSenha);
@@ -55,6 +54,6 @@ public class UsuarioActivity extends ActionBarActivity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        dao.fechaConexao();
+        dao.fecharDB();
     }
 }

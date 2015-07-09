@@ -1,16 +1,18 @@
-package projetos.welper.apontamentodespesas.helper;
+package projetos.welper.apontamentodespesas.bd;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by welper on 22/06/2015.
- */
-public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String BANCO_DADOS = "despesas";
-    private static final int VERSAO = 1;
+public class BdCore extends SQLiteOpenHelper {
+
+    private static final String NOME_BD = "bd_despesa";
+    private static final int VERSAO_BD = 2;
+
+    public BdCore (Context context) {
+        super(context, NOME_BD, null, VERSAO_BD);
+    }
 
     public static final String TB_DESPESA = "despesa";
     public static final String TB_CATEGORIA = "categoria";
@@ -21,7 +23,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String _ID = "_idUsuario";
         public static final String LOGIN = "login";
         public static final String SENHA = "senha";
-
         public static final String[] COLUNAS = new String[]{ _ID, LOGIN, SENHA };
     }
 
@@ -33,28 +34,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String DESCRICAO = "descricao";
         public static final String DATA = "data";
         public static final String OBSERVACAO = "observacao";
-
         public static final String[] COLUNAS = new String[]{ _ID, CATEGORIA, VALOR, DATA, FORMA_PGTO, DESCRICAO };
     }
 
     public static class Categoria {
         public static final String _ID = "_idCategoria";
         public static final String DESCRICAO = "descricaoCatagoria";
-
         public static final String[] COLUNAS = new String[]{ _ID, DESCRICAO };
     }
-
 
     public static class Relatorio {
         public static final String CATEGORIA = "categoria";
         public static final String TOTAL = "total";
-
         public static final String[] COLUNAS = new String[]{ CATEGORIA, TOTAL };
-    }
-
-
-    public DatabaseHelper(Context context){
-        super(context, BANCO_DADOS, null, VERSAO);
     }
 
     @Override
@@ -83,14 +75,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void tabelaUsuario (SQLiteDatabase db) {
         db.execSQL("CREATE TABLE "+ TB_USUARIO +" (" +
-                DatabaseHelper.Usuario._ID + " INTEGER, " +
+                Usuario._ID + " INTEGER, " +
                 Usuario.LOGIN + " TEXT NOT NULL, " +
                 Usuario.SENHA + " TEXT NOT NULL, " +
-                " PRIMARY KEY("+ DatabaseHelper.Usuario._ID +") );");
+                " PRIMARY KEY("+ Usuario._ID +") );");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase bd, int oldVersion, int newVersion) {
 
     }
 }

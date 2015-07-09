@@ -36,7 +36,6 @@ public class Despesa implements Serializable{
         this.valor = valor;
         this.data = data;
         this.id = id;
-        this.imagem = imagem;
     }
 
     public String getCategoria() {

@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import projetos.welper.apontamentodespesas.adapter.AdapterRelatorio;
-import projetos.welper.apontamentodespesas.dao.DespesaDao;
+import projetos.welper.apontamentodespesas.dao.RelatorioDao;
 import projetos.welper.apontamentodespesas.model.Relatorio;
 
 
 public class RelatorioActivityActivity extends ListActivity {
 
     private AdapterRelatorio adapterRelatorio;
-    private DespesaDao dao;
+    private RelatorioDao dao;
     private List<Relatorio> relatorios;
     private Double total = 0.0;
     private TextView txtTotal;
@@ -32,10 +32,9 @@ public class RelatorioActivityActivity extends ListActivity {
     }
 
     private void montaResultado() {
-        dao = new DespesaDao(this);
-        dao.abreConexao();
+        dao = new RelatorioDao(this);
         relatorios.clear();
-        relatorios.addAll(dao.getResumoDespesas());
+        relatorios.addAll(dao.getRelatorio());
 
         for(Relatorio r : relatorios){
            String v = r.getValor().replace("R$","").replace(",",".");
@@ -56,9 +55,8 @@ public class RelatorioActivityActivity extends ListActivity {
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
-        dao.fechaConexao();
+        dao.fecharDB();
     }
 
 }

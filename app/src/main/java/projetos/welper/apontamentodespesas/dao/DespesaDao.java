@@ -6,15 +6,14 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import projetos.welper.apontamentodespesas.R;
 import projetos.welper.apontamentodespesas.helper.DatabaseHelper;
+import projetos.welper.apontamentodespesas.model.Categoria;
 import projetos.welper.apontamentodespesas.model.Despesa;
 import projetos.welper.apontamentodespesas.model.Relatorio;
 
@@ -25,14 +24,15 @@ public class DespesaDao extends AbstractDao{
 
     public DespesaDao(Context context){
         helper = new DatabaseHelper(context);
+        abreConexao();
     }
-
 
     public List<Despesa> getDespesas(){
         List<Despesa> despesas = new ArrayList<Despesa>();
-        Cursor cursor = findAllDespesas();
+        Cursor cursor = db.rawQuery("SELECT _id, categoria, data, forma_pgto, descricao, valor FROM despesa " +
+                "ORDER BY data DESC, categoria ASC", null);
         cursor.moveToFirst();
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             Despesa d = criaDespesa(cursor);
             despesas.add(d);
         }
@@ -41,35 +41,6 @@ public class DespesaDao extends AbstractDao{
         return despesas;
     }
 
-    private Cursor findAllDespesas() {
-        return db.rawQuery("SELECT _id, categoria, data, forma_pgto, descricao, valor FROM despesa " +
-                "ORDER BY data DESC, categoria ASC", null);
-    }
-
-    public List<Map<String,Object>> getMapDespesas(){
-        List<Map<String,Object>> despesas = new ArrayList<Map<String, Object>>();
-        Cursor cursor = findAllDespesas();
-        cursor.moveToFirst();
-
-        for(int i = 0; i < cursor.getCount(); i++){
-            Map<String, Object> item = new HashMap<String,Object>();
-
-            item.put("id", cursor.getString(0));
-            item.put("despesa", cursor.getString(1));
-            Long data_ = cursor.getLong(2);
-            Date data = new Date(data_);
-            item.put("data", new SimpleDateFormat("dd/MM/yyyy").format(data));
-            item.put("forma_pgto", cursor.getString(3));
-            item.put("descricao", cursor.getString(4));
-            item.put("total", cursor.getDouble(5));
-            item.put("imagem", R.drawable.config);
-
-            despesas.add(item);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return despesas;
-    }
 
     public boolean removerDespesa(String idDespSelecionada) {
         String whereClause = DatabaseHelper.Despesa._ID + " = ?";
@@ -89,7 +60,7 @@ public class DespesaDao extends AbstractDao{
         return despesa;
     }
 
-    public long inserir(Despesa despesa){
+    public long inserirCategoria(Despesa despesa){
         long r = db.insert(DatabaseHelper.TB_DESPESA, null, getContentValuesDespesa(despesa));
         return r;
     }
@@ -139,6 +110,73 @@ public class DespesaDao extends AbstractDao{
         }
         cursor.close();
         return relatorios;
+    }
+
+    public List<Categoria> getCategorias(){
+        List<Categoria> categorias = new ArrayList<Categoria>();
+        Cursor cursor = findAll();
+        cursor.moveToFirst();
+        while(cursor.moveToNext()){
+            Categoria c = criaCategoria(cursor);
+            categorias.add(c);
+        }
+        cursor.close();
+        return categorias;
+    }
+
+    private Cursor findAll() {
+        return db.rawQuery("SELECT " + DatabaseHelper.Categoria._ID
+                + ", " + DatabaseHelper.Categoria.DESCRICAO
+                + " FROM categoria "
+                + " ORDER BY " + DatabaseHelper.Categoria.DESCRICAO, null);
+    }
+
+    private Categoria criaCategoria(Cursor cursor) {
+        Categoria c = new Categoria(
+                cursor.getLong(cursor.getColumnIndex(DatabaseHelper.Categoria._ID)),
+                cursor.getString(cursor.getColumnIndex(DatabaseHelper.Categoria.DESCRICAO)));
+        return c;
+    }
+
+    public List<Map<String,Object>> getMapObjeto(){
+        List<Map<String,Object>> maps = new ArrayList<Map<String, Object>>();
+        Cursor cursor = findAll();
+        cursor.moveToFirst();
+
+        for(int i = 0; i < cursor.getCount(); i++){
+            Map<String, Object> item = new HashMap<String,Object>();
+            item.put(DatabaseHelper.Categoria._ID, cursor.getString(0));
+            item.put(DatabaseHelper.Categoria.DESCRICAO, cursor.getString(1));
+            maps.add(item);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return maps;
+    }
+
+    public boolean remover(String id_) {
+        String whereClause = DatabaseHelper.Categoria._ID + " = ?";
+        String[] whereArgs = new String[]{ id_ };
+        int removidos = db.delete(DatabaseHelper.TB_CATEGORIA, whereClause, whereArgs);
+        return removidos > 0;
+    }
+
+    public Long inserirCategoria(Categoria cat){
+        return db.insert(DatabaseHelper.TB_CATEGORIA, null, getContentValues(cat));
+    }
+
+    private ContentValues getContentValues(Categoria cat) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.Categoria.DESCRICAO, cat.getDescricao());
+        values.put(DatabaseHelper.Categoria._ID, cat.getId());
+        return values;
+    }
+
+    public int atualizar(Categoria cat){
+        return db.update(DatabaseHelper.TB_CATEGORIA,
+                getContentValues(cat),
+                DatabaseHelper.Categoria._ID + " = ?",
+                new String[]{cat.getId().toString()});
     }
 
 }

@@ -27,7 +27,6 @@ public class LoginActivity extends Activity {
         senha = (EditText) findViewById(R.id.txtSenha);
 
         dao = new LoginDao(this);
-        dao.abreConexao();
     }
 
     public void entrarOnClick(View view){
@@ -58,6 +57,6 @@ public class LoginActivity extends Activity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        dao.fechaConexao();
+        dao.fecharDB();
     }
 }

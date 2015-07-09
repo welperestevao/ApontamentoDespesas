@@ -23,7 +23,6 @@ public class AlterarSenhaActivity extends ActionBarActivity {
         setContentView(R.layout.alterarsenha_activity);
 
         dao = new LoginDao(this);
-        dao.abreConexao();
 
         senha = (EditText) findViewById(R.id.txtSenha);
         confSenha = (EditText) findViewById(R.id.txtConfSenha);
@@ -55,6 +54,6 @@ public class AlterarSenhaActivity extends ActionBarActivity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        dao.fechaConexao();
+        dao.fecharDB();
     }
 }

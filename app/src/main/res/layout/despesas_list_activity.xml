@@ -24,6 +24,14 @@
         android:textStyle="bold"
         android:gravity="center_vertical|center_horizontal" />
     </LinearLayout>
+    <Button
+        android:id="@+id/btnCadDesp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="abrirCadDespesa"
+        android:text="Nova Despesa"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="15dp"/>
     <ListView android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

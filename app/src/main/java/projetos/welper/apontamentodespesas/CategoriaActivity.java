@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import projetos.welper.apontamentodespesas.adapter.CategoriaAdapter;
-import projetos.welper.apontamentodespesas.dao.CategoriaDao;
+import projetos.welper.apontamentodespesas.bd.CategoriaDB;
 import projetos.welper.apontamentodespesas.model.Categoria;
 
 
@@ -28,7 +28,7 @@ public class CategoriaActivity extends ListActivity implements DialogInterface.O
     public final int REMOVER = 0;
     private android.app.AlertDialog alertDialog;
     private List<Categoria> listaCategorias = new ArrayList<Categoria>();
-    private CategoriaDao dao;
+    private CategoriaDB dao;
     public Categoria catSelecionada;
     private Button btnNovaCat;
     private CategoriaAdapter adapter;
@@ -43,7 +43,7 @@ public class CategoriaActivity extends ListActivity implements DialogInterface.O
         setContentView(R.layout.categoria_activity);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        dao = new CategoriaDao(this);
+        dao = new CategoriaDB(this);
         inicializaListView();
         this.alertDialog = criaAlertDialog();
 
@@ -104,17 +104,13 @@ public class CategoriaActivity extends ListActivity implements DialogInterface.O
 
     private void inicializaListView() {
         listaCategorias = new ArrayList<Categoria>();
-        listaCategorias.addAll(dao.getCategorias());
+        listaCategorias.addAll(dao.buscar());
         adapter = new CategoriaAdapter(listaCategorias,this);
         setListAdapter(adapter);
     }
 
-    public CategoriaDao getDao() {
-        return dao;
-    }
-
     public void salvar(Categoria categoria_) {
-        if (getDao().inserir(categoria_).intValue() != -1) {
+        if (dao.inserir(categoria_).intValue() != -1) {
             Toast.makeText(this, "Categoria gravada com sucesso", Toast.LENGTH_LONG).show();
             inicializaListView();
         } else {
@@ -130,10 +126,16 @@ public class CategoriaActivity extends ListActivity implements DialogInterface.O
     public void onClick(DialogInterface dialog, int item) {
         switch (item){
             case REMOVER:
-                dao.remover(catSelecionada.getId().toString());
+                dao.excluir(catSelecionada);
                 listaCategorias.remove(posCatSelecionada);
                 getListView().invalidateViews();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        dao.fecharDB();
     }
 }

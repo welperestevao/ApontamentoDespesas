@@ -85,14 +85,12 @@ public class DespesaActivity extends FragmentActivity {
     }
 
     private void populaCategorias() {
-        categoriaDao.abreConexao();
         categorias = new ArrayList<Categoria>();
         Categoria c = new Categoria(null, "");
         categorias.add(c);
         categorias.addAll(categoriaDao.getCategorias());
         categoriaCbo.setAdapter(new ArrayAdapter<Categoria>(getBaseContext(), android.R.layout.simple_spinner_item, categorias));
-        categoriaDao.fechaConexao();
-    }
+   }
 
     private ArrayAdapter<CharSequence> getArrayAdapterCategorias(int categorias_array) {
         return ArrayAdapter.createFromResource(this,
@@ -182,7 +180,7 @@ public class DespesaActivity extends FragmentActivity {
         if( despesa.getId() != null ){
            resultado = new Long( dao.atualizarDespesa(despesa) );
         } else{
-            resultado = dao.inserir(despesa);
+            resultado = dao.inserirCategoria(despesa);
             valor.setText("");
             desc.setText("");
         }

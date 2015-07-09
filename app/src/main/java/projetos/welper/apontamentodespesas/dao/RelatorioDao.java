@@ -2,26 +2,30 @@ package projetos.welper.apontamentodespesas.dao;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import projetos.welper.apontamentodespesas.helper.DatabaseHelper;
+import projetos.welper.apontamentodespesas.bd.BdCore;
 import projetos.welper.apontamentodespesas.model.Relatorio;
 
 /**
  * Created by welper on 28/06/2015.
  */
-public class RelatorioDao extends AbstractDao {
+public class RelatorioDao {
+
+    private SQLiteDatabase bd;
 
     public RelatorioDao(Context context){
-        helper = new DatabaseHelper(context);
+        BdCore auxBd = new BdCore(context);
+        bd = auxBd.getWritableDatabase();
     }
 
     public List<Relatorio> getRelatorio(){
         List<Relatorio> rels = new ArrayList<Relatorio>();
-        Cursor cursor = db.rawQuery(getSQLResumoDespesas(), null);
+        Cursor cursor = bd.rawQuery(getSQLResumoDespesas(), null);
         cursor.moveToFirst();
         while(cursor.moveToNext()){
             Relatorio r = criaRelatorio(cursor);
@@ -38,6 +42,10 @@ public class RelatorioDao extends AbstractDao {
         );
 
         return r;
+    }
+
+    public void fecharDB(){
+        bd.close();
     }
 
     private String getSQLResumoDespesas(){
